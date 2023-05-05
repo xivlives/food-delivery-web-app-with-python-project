@@ -6,7 +6,7 @@ class Index(View):
         return render(request, 'customer/index.html')
     
 
-class About(view):
-    def get(self, request, *args, **kwargs);
+class About(View):
+    def get(self, request, *args, **kwargs):
         return render(request, 'customer/about.html')
 
