@@ -3,10 +3,10 @@ from django.views import View
 
 class Index(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'customer/index.html')
+        return render(request, 'customer/Index.html')
     
 
 class About(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'customer/about.html')
+        return render(request, 'customer/About.html')
 
