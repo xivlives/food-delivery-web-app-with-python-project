@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-
-from deliver.customer.models import MenuItem
+from customer.models import MenuItem, Category, OrderModel
 
 class Index(View):
     def get(self, request, *args, **kwargs):
@@ -16,10 +15,10 @@ class About(View):
 class Order(View):
     def get(self, request, *args, **kwargs):
         #get every item from each category 
-        appetizers = MenuItem.objects.filter(catgory__name__contains='Appetizer')
-        entres = MenuItem.objects.filter(catgory__name__contains='Entre')
-        desserts = MenuItem.objects.filter(catgory__name__contains='Dessert')
-        drinks = MenuItem.objects.filter(catgory__name__contains='Drink')
+        appetizers = MenuItem.objects.filter(category__name__contains='Appetizer')
+        entres = MenuItem.objects.filter(category__name__contains='Entre')
+        desserts = MenuItem.objects.filter(category__name__contains='Dessert')
+        drinks = MenuItem.objects.filter(category__name__contains='Drink')
         #pass into context
         context = {
             'appetizers': appetizers,
@@ -51,17 +50,16 @@ class Order(View):
             price = 0
             item_ids = []
 
-            for item in order_items['items']:
-                price += item['price']
-                item_ids.append(['id'])
+        for item in order_items['items']:
+            price += item['price']
+            item_ids.append(item['id'])
 
+        order = OrderModel.objects.create(price=price)
+        order.items.add(*item_ids)
 
-            order = OrderModel.objects.create(price=price)
-            order.items.add(*item_ids)
-
-            context = {
-                'items': order_items['items'],
-                'price': price
+        context = {
+            'items': order_items['items'],
+            'price': price
             }
 
-            return render(request, 'customer/order_confirmation.html', context)
+        return render(request, 'customer/order_confirmation.html', context)
